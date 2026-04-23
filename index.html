@@ -156,11 +156,15 @@
         <span class="text-lg font-bold text-earth">FARM LOT</span>
         <span class="text-xs text-muted mt-1">Raw · natural vegetation · jackfruit trees</span>
       </div>
+      <div class="border border-[#e5e5e3] p-8 flex flex-col justify-center items-center text-center hover:border-earth transition-colors">
+        <span class="material-symbols-outlined text-4xl mb-3 text-warm">bolt</span>
+        <span class="text-[10px] font-bold uppercase tracking-widest text-warm mb-1">Utilities</span>
+        <span class="text-lg font-bold text-earth">READY TO CONNECT</span>
+        <span class="text-xs text-muted mt-1">Electricity, water & internet available in the area</span>
+      </div>
     </div>
   </div>
 </section>
-
-<!-- WHY BUY NOW -->
 <section class="bg-earth py-24 px-6">
   <div class="max-w-6xl mx-auto">
     <div class="mb-16">
@@ -229,6 +233,39 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
         </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESS ROUTE -->
+<section class="bg-[#f0efe9] py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+      <div class="md:col-span-4">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-warm block mb-4">Access Route</span>
+        <h2 class="text-3xl md:text-4xl font-light text-earth mb-6 leading-tight">Easy to Find.<br/><span class="font-bold">4 Minutes from Town.</span></h2>
+        <p class="text-muted text-sm leading-relaxed mb-6">Mula sa Mendez Municipal Hall, 4 minuto lang — 1.2km. Diretso at walang kalituhan. Pag nasa main road ka na sa Brgy. Miguel Mojica, kita mo na ang turn-in.</p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 text-sm text-muted">
+            <span class="material-symbols-outlined text-base text-warm">directions_car</span>4 mins from Mendez Municipal Hall
+          </div>
+          <div class="flex items-center gap-3 text-sm text-muted">
+            <span class="material-symbols-outlined text-base text-warm">straighten</span>1.2 km from town proper
+          </div>
+          <div class="flex items-center gap-3 text-sm text-muted">
+            <span class="material-symbols-outlined text-base text-warm">route</span>Via Mendez-Tagaytay Road — one main road
+          </div>
+          <div class="flex items-center gap-3 text-sm text-muted">
+            <span class="material-symbols-outlined text-base text-warm">local_parking</span>Vehicle access confirmed — concrete pathway
+          </div>
+        </div>
+      </div>
+      <div class="md:col-span-8">
+        <div class="rounded-xl overflow-hidden shadow-xl border border-[#e5e5e3]">
+          <img src="route.png" alt="Route from Mendez Municipal Hall to property — 4 mins, 1.2km" class="w-full h-auto block"/>
+        </div>
+        <p class="text-xs text-muted mt-3 text-center">📍 Route from Mendez Municipal Hall to the property — 4 mins · 1.2 km</p>
       </div>
     </div>
   </div>
@@ -423,21 +460,43 @@
 </div>
 
 <script>
-const SYSTEM_PROMPT = `You are a helpful property assistant for a residential farm lot for sale in Mendez, Cavite, Philippines.
+const SYSTEM_PROMPT = `Ikaw ay isang property assistant para sa isang residential farm lot na ibinebenta sa Mendez, Cavite, Philippines. Sumagot ka sa Taglish — mix ng Tagalog at English, natural at friendly ang dating, parang kaibigan na nagpapaliwanag.
 
-PROPERTY: 265 sqm · Brgy. Miguel Mojica, Mendez, Cavite · 12 mins from Tagaytay · ₱6,800/sqm · Total ₱1,802,000
-TITLE: OCT No. 2024000761 · Clean · Zero encumbrances · Residential Free Patent
-FRONTAGE: 13 meters · Second lot from main road · ~20m via concrete pathway
-TYPE: Raw farm lot · natural vegetation · jackfruit trees
-SELLER: Harold Estoce · direct owner · no broker · 0977 274 0743 · facebook.com/doy.fawkes
+PROPERTY DETAILS:
+- Uri: Residential farm lot — hindi ito standard subdivision lot. Raw lot ito na may natural vegetation at jackfruit trees. Mas maluwag, mas natural ang pakiramdam.
+- Location: Brgy. Miguel Mojica, Mendez, Cavite (katabi ng Tagaytay City — 12 minuto lang, walang traffic)
+- Climate: Katulad ng Tagaytay — malamig at presko year-round dahil highland area
+- Lot Area: 265 sqm
+- Frontage: 13 meters (maluwag — kasya ang gate, driveway, at full-width na bahay)
+- Utilities: Available sa area — kuryente (electricity), tubig (water), at internet connection. Ready to connect.
+- Presyo: ₱6,800 per sqm (dati ₱7,500/sqm ang comparable lots sa area — mas mura ng ₱700/sqm)
+- Total: ₱1,802,000
+- 30% mas mura kumpara sa mga lots sa Tagaytay City mismo
 
-KEY OBJECTIONS:
-- "Second from road?" → ~20m from main road, concrete path, 13m frontage fits vehicles fine
-- "Vegetation?" → Raw lot, natural state. Minimal clearing cost. What you see is what you get.
-- "30% cheaper?" → Mendez land is ~30% below Tagaytay City prices for comparable highland lots
-- "Title?" → OCT, blank Memorandum of Encumbrances, zero encumbrances, available for due diligence
+DOCUMENTS (KUMPLETO):
+- Original Certificate of Title (OCT No. 2024000761) — malinis, walang encumbrances
+- Memorandum of Encumbrances: BLANK — walang utang, walang lien, walang pending claims
+- Subdivision Plan: Csd-04-045811-D, DENR approved
+- Tax Declaration: TD No. 14-0020-01205, current
+- Lahat ng documents ay available para sa due diligence ng buyer
 
-Keep answers short and conversational. For serious negotiations direct to Harold.`;
+SELLER:
+- Pangalan: Harold Estoce — siya mismo ang registered owner, direkta siyang nagbebenta
+- Walang broker, walang agent — mas mabilis ang negosasyon, walang dagdag na bayad
+- Contact: 0977 274 0743 (call o Viber)
+- Facebook: https://www.facebook.com/doy.fawkes
+
+COMMON OBJECTIONS:
+- "Second from road?" → Mga 20 metros lang mula main road via concrete path. Ang 13-meter frontage niya ay mas maluwag pa sa karamihan ng lots na direkta sa kalsada. Kita mo sa video.
+- "Malayo sa Tagaytay?" → 12 minuto lang — walang traffic, hindi katulad ng Tagaytay mismo tuwing weekend.
+- "Malinis ba ang title?" → Oo, OCT at blank Memorandum of Encumbrances. Walang encumbrances kahit isa. Available para sa due diligence.
+- "Bakit mas mura?" → Direct owner sale — walang broker commission. At Mendez lot pa ito, hindi Tagaytay City price.
+
+INSTRUCTIONS:
+- Sumagot sa Taglish — natural, friendly, hindi robotic
+- Maikli lang ang sagot — ito ay chat widget sa mobile
+- Para sa negosasyon ng presyo, i-refer kay Harold directly
+- Kung hindi mo alam ang sagot, sabihin mo honestly at i-refer kay Harold`;
 
 let messages = [], chatOpen = false, greeted = false;
 
