@@ -465,14 +465,29 @@
 </nav>
 
 <!-- CHAT WIDGET -->
-<div id="chat-bubble" class="fixed bottom-20 right-4 md:bottom-6 z-50 flex flex-col items-end gap-3">
 <style>
-  #chat-input:focus ~ * { }
-  @supports (-webkit-touch-callout: none) {
-    #chat-bubble { bottom: env(safe-area-inset-bottom, 80px); }
+  #chat-window {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 75vh;
+    z-index: 9999;
+    border-radius: 16px 16px 0 0;
+    display: none;
+    flex-direction: column;
+  }
+  @media (min-width: 768px) {
+    #chat-window {
+      position: static;
+      width: 340px;
+      height: 460px;
+      border-radius: 16px;
+    }
   }
 </style>
-  <div id="chat-window" style="display:none;width:min(340px,calc(100vw - 32px));height:460px;" class="flex-col bg-white rounded-2xl shadow-2xl overflow-hidden">
+<div id="chat-bubble" class="fixed bottom-20 right-4 md:bottom-6 z-50 flex flex-col items-end gap-3">
+  <div id="chat-window" style="display:none;" class="flex-col bg-white shadow-2xl overflow-hidden" style="border-radius:16px 16px 0 0;">
     <div class="bg-earth px-4 py-3 flex items-center justify-between flex-shrink-0">
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 bg-[#c8a84b] rounded-full flex items-center justify-center text-sm">🏡</div>
@@ -483,8 +498,8 @@
       </div>
       <button onclick="toggleChat()" class="text-white/40 hover:text-white text-lg leading-none">✕</button>
     </div>
-    <div id="chat-messages" class="p-4 flex flex-col gap-2" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
-    <div class="flex p-3 gap-2 border-t border-[#eee] flex-shrink-0">
+    <div id="chat-messages" class="p-4 flex flex-col gap-2" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;"></div>
+    <div class="flex p-3 gap-2 border-t border-[#eee] flex-shrink-0 bg-white">
       <input id="chat-input" class="flex-1 border border-[#ddd] rounded-full px-4 py-2 text-sm outline-none focus:border-earth" placeholder="Ask about the property..." style="font-size:16px;"/>
       <button id="chat-send" class="bg-earth text-white rounded-full w-9 h-9 flex items-center justify-center text-sm hover:bg-muted transition-colors flex-shrink-0">➤</button>
     </div>
@@ -541,12 +556,17 @@ function toggleChat() {
   const win = document.getElementById('chat-window');
   document.getElementById('chat-badge').style.display = 'none';
   win.style.display = chatOpen ? 'flex' : 'none';
-  win.style.flexDirection = 'column';
   if (chatOpen && !greeted) {
     addMsg('bot', "Hi! Ask me anything about this Mendez farm lot — location, title, price, road access, or how to book a site visit.");
     greeted = true;
   }
-  if (chatOpen) setTimeout(() => document.getElementById('chat-input').focus(), 100);
+  if (chatOpen) {
+    setTimeout(() => {
+      document.getElementById('chat-input').focus();
+      const c = document.getElementById('chat-messages');
+      c.scrollTop = c.scrollHeight;
+    }, 100);
+  }
 }
 
 function addMsg(role, text) {
