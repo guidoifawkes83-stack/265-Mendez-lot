@@ -467,7 +467,7 @@
 </footer>
 
 <!-- MOBILE BOTTOM NAV -->
-<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 md:hidden bg-[#f9f9f7]/95 backdrop-blur-xl border-t border-[#e5e5e3] z-50">
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 md:hidden bg-[#f9f9f7]/95 backdrop-blur-xl border-t border-[#e5e5e3] z-50" id="mobile-nav">
   <a href="#overview" class="flex flex-col items-center text-earth gap-0.5">
     <span class="material-symbols-outlined text-xl">landscape</span>
     <span class="text-[9px] uppercase tracking-widest font-bold">Overview</span>
@@ -488,29 +488,117 @@
 
 <!-- CHAT WIDGET -->
 <style>
-  #chat-window {
+  /* ── CHAT BUBBLE (toggle button) ── */
+  #chat-bubble {
     position: fixed;
-    bottom: 0;
+    bottom: 80px; /* above mobile nav */
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  @media (min-width: 768px) {
+    #chat-bubble {
+      bottom: 24px;
+    }
+  }
+
+  /* ── CHAT WINDOW ── */
+  #chat-window {
+    /* Mobile: full-width sheet sliding up from above the bottom nav */
+    position: fixed;
     left: 0;
     right: 0;
-    height: 75vh;
-    z-index: 9999;
+    bottom: 60px; /* sits above the mobile bottom nav */
+    height: 70vh;
+    max-height: 70vh;
+    z-index: 9998;
     border-radius: 16px 16px 0 0;
     display: none;
     flex-direction: column;
+    background: white;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+    /* Smooth keyboard transition */
+    transition: height 0.15s ease, bottom 0.15s ease;
   }
+
   @media (min-width: 768px) {
+    /* Desktop: floating bubble beside the toggle button */
     #chat-window {
-      position: static;
+      position: absolute;
+      bottom: 68px;
+      right: 0;
+      left: auto;
       width: 340px;
       height: 460px;
+      max-height: 460px;
       border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
     }
   }
+
+  /* ── MESSAGES AREA ── */
+  #chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── INPUT BAR — always visible above keyboard ── */
+  #chat-input-bar {
+    display: flex;
+    padding: 10px 12px;
+    gap: 8px;
+    border-top: 1px solid #eee;
+    flex-shrink: 0;
+    background: white;
+    /* Safe area for iPhone home indicator */
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+
+  #chat-input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 16px; /* prevents iOS zoom on focus */
+    outline: none;
+  }
+
+  #chat-input:focus {
+    border-color: #1a1a18;
+  }
+
+  #chat-send {
+    background: #1a1a18;
+    color: white;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border: none;
+  }
+
+  #chat-send:hover { background: #6b6b60; }
 </style>
-<div id="chat-bubble" class="fixed bottom-20 right-4 md:bottom-6 z-50 flex flex-col items-end gap-3">
-  <div id="chat-window" style="display:none;" class="flex-col bg-white shadow-2xl overflow-hidden" style="border-radius:16px 16px 0 0;">
-    <div class="bg-earth px-4 py-3 flex items-center justify-between flex-shrink-0">
+
+<div id="chat-bubble">
+  <div id="chat-window">
+    <!-- Header -->
+    <div class="bg-earth px-4 py-3 flex items-center justify-between flex-shrink-0" style="border-radius:16px 16px 0 0;">
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 bg-[#c8a84b] rounded-full flex items-center justify-center text-sm">🏡</div>
         <div>
@@ -520,12 +608,16 @@
       </div>
       <button onclick="toggleChat()" class="text-white/40 hover:text-white text-lg leading-none">✕</button>
     </div>
-    <div id="chat-messages" class="p-4 flex flex-col gap-2" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;"></div>
-    <div class="flex p-3 gap-2 border-t border-[#eee] flex-shrink-0 bg-white">
-      <input id="chat-input" class="flex-1 border border-[#ddd] rounded-full px-4 py-2 text-sm outline-none focus:border-earth" placeholder="Ask about the property..." style="font-size:16px;"/>
-      <button id="chat-send" class="bg-earth text-white rounded-full w-9 h-9 flex items-center justify-center text-sm hover:bg-muted transition-colors flex-shrink-0">➤</button>
+    <!-- Messages -->
+    <div id="chat-messages"></div>
+    <!-- Input bar -->
+    <div id="chat-input-bar">
+      <input id="chat-input" placeholder="Ask about the property..." autocomplete="off"/>
+      <button id="chat-send">➤</button>
     </div>
   </div>
+
+  <!-- Toggle button -->
   <div class="relative">
     <button id="chat-toggle" onclick="toggleChat()" class="w-14 h-14 bg-earth rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-muted transition-colors">💬</button>
     <div id="chat-badge" class="absolute -top-1 -right-1 bg-[#c8a84b] text-black text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center">1</div>
@@ -544,6 +636,7 @@ PROPERTY DETAILS:
 - Utilities: Available sa area — kuryente (electricity), tubig (water), at internet connection. Ready to connect.
 - Presyo: ₱6,800 per sqm (dati ₱7,500/sqm ang comparable lots sa area — mas mura ng ₱700/sqm)
 - Total: ₱1,802,000
+- INSTALLMENT: Pwede sa installment — 40% down payment, at ang natirang balance ay pwedeng bayaran ng hanggang 2 taon. Maluwag ang terms.
 - 30% mas mura kumpara sa mga lots sa Tagaytay City mismo
 
 DOCUMENTS (KUMPLETO):
@@ -564,6 +657,17 @@ COMMON OBJECTIONS:
 - "Malayo sa Tagaytay?" → 12 minuto lang — walang traffic, hindi katulad ng Tagaytay mismo tuwing weekend.
 - "Malinis ba ang title?" → Oo, OCT at blank Memorandum of Encumbrances. Walang encumbrances kahit isa. Available para sa due diligence.
 - "Bakit mas mura?" → Direct owner sale — walang broker commission. At Mendez lot pa ito, hindi Tagaytay City price.
+- "Kaya ko ba?" → Pwede sa installment — 40% DP lang ang kailangan, tapos hanggang 2 taon ang balance. Mas kaya!
+
+CONTACT CAPTURE:
+- Kapag nagpakita ng interes ang visitor (nagtanong tungkol sa presyo, installment, site visit, o documents), natural na itanong: "Gusto mo bang i-update ni Harold kung kailan available para sa site visit o kung may ibabago sa presyo? Ano preferred contact mo — Facebook o phone/Viber?"
+- Huwag agad itanong sa simula — maghintay muna ng 1-2 exchanges bago mag-ask
+- Isa lang ang itanong — huwag mag-overask
+
+INTENT DETECTION (para sa iyong sariling reference, huwag sabihin sa user):
+- LOW: nagtatanong lang tungkol sa location o description
+- MEDIUM: nagtatanong tungkol sa presyo o documents
+- HIGH: nagtatanong tungkol sa installment, site visit, o negotiation
 
 INSTRUCTIONS:
 - Sumagot sa Taglish — natural, friendly, hindi robotic
@@ -579,12 +683,11 @@ function toggleChat() {
   document.getElementById('chat-badge').style.display = 'none';
   win.style.display = chatOpen ? 'flex' : 'none';
   if (chatOpen && !greeted) {
-    addMsg('bot', "Hi! Ask me anything about this Mendez farm lot — location, title, price, road access, or how to book a site visit.");
+    addMsg('bot', "Hi! Ask me anything about this Mendez farm lot — location, title, price, installment terms, or how to book a site visit.");
     greeted = true;
   }
   if (chatOpen) {
     setTimeout(() => {
-      document.getElementById('chat-input').focus();
       const c = document.getElementById('chat-messages');
       c.scrollTop = c.scrollHeight;
     }, 100);
@@ -637,14 +740,28 @@ async function sendMessage() {
 document.getElementById('chat-send').addEventListener('click', sendMessage);
 document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
-// Fix mobile keyboard pushing chat out of view
-document.getElementById('chat-input').addEventListener('focus', () => {
-  setTimeout(() => {
+// ── MOBILE KEYBOARD FIX ──
+// When the virtual keyboard opens, visualViewport shrinks.
+// We reposition the chat window so the input bar stays visible.
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    if (!chatOpen || window.innerWidth >= 768) return;
+    const win = document.getElementById('chat-window');
+    const keyboardHeight = window.innerHeight - window.visualViewport.height;
+    if (keyboardHeight > 100) {
+      // Keyboard is open — lift the chat window above it
+      win.style.bottom = keyboardHeight + 'px';
+      win.style.height = (window.visualViewport.height - 10) + 'px';
+    } else {
+      // Keyboard closed — restore default
+      win.style.bottom = '60px';
+      win.style.height = '70vh';
+    }
+    // Scroll messages to bottom
     const c = document.getElementById('chat-messages');
     c.scrollTop = c.scrollHeight;
-    document.getElementById('chat-window').scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, 300);
-});
+  });
+}
 
 function sendInquiry() {
   const name = document.getElementById('inq-name').value.trim();
