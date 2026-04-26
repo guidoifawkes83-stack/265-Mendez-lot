@@ -531,6 +531,18 @@ async function sendMessage() {
 document.getElementById('chat-send').addEventListener('click', sendMessage);
 document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
+  // Fix for Facebook in-app browser keyboard covering input on Android
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    const chatWindow = document.getElementById('chat-window');
+    if (!chatWindow) return;
+    const keyboardHeight = window.innerHeight - window.visualViewport.height;
+    chatWindow.style.bottom = keyboardHeight > 50
+      ? `${keyboardHeight}px`
+      : '';
+  });
+}
+
 function sendInquiry() {
   const name = document.getElementById('inq-name').value.trim();
   const phone = document.getElementById('inq-phone').value.trim();
