@@ -510,6 +510,7 @@ async function sendMessage() {
   input.value = '';
   addMsg('user', text);
   messages.push({ role: 'user', content: text });
+  if (messages.length === 1 && window.gtag) gtag('event', 'chat_started');
   showTyping();
   try {
     const res = await fetch('/api/chat', {
@@ -538,14 +539,53 @@ document.getElementById('chat-input').addEventListener('focusin', () => {
   }, 300);
 });
 
-function sendInquiry() {
-  const name = document.getElementById('inq-name').value.trim();
-  const phone = document.getElementById('inq-phone').value.trim();
+async function sendInquiry() {
+  const nameEl = document.getElementById('inq-name');
+  const phoneEl = document.getElementById('inq-phone');
+  const msgEl = document.getElementById('inq-msg');
+  const name = nameEl.value.trim();
+  const phone = phoneEl.value.trim();
+  const message = msgEl.value.trim();
   if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+
+  const btn = document.querySelector('button[onclick="sendInquiry()"]');
   const status = document.getElementById('inq-status');
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/inquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, message })
+    });
+    if (!res.ok) throw new Error('Request failed');
+
+    status.textContent = '✓ Sent! Harold will get back to you shortly.';
+    if (window.gtag) gtag('event', 'generate_lead', { method: 'inquiry_form' });
+    if (window.fbq) fbq('track', 'Lead');
+    nameEl.value = ''; phoneEl.value = ''; msgEl.value = '';
+  } catch (e) {
+    status.textContent = 'Hindi na-send. Please call or Viber Harold directly: 0977 274 0743';
+  }
+
+  btn.disabled = false;
   status.classList.remove('hidden');
-  setTimeout(() => status.classList.add('hidden'), 5000);
+  setTimeout(() => status.classList.add('hidden'), 8000);
 }
+</script>
+<script>
+document.addEventListener('click', function (e) {
+  var el = e.target.closest('a');
+  if (!el) return;
+  var href = el.getAttribute('href') || '';
+  var evt = null;
+  if (href.indexOf('tel:') === 0) evt = 'click_call';
+  else if (href.indexOf('facebook.com') > -1) evt = 'click_messenger';
+  if (evt) {
+    if (window.gtag) gtag('event', evt, { link_url: href });
+    if (window.fbq) fbq('track', 'Contact');
+  }
+});
 </script>
 </body>
 </html>
